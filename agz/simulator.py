@@ -3,7 +3,7 @@ from typing import Optional, Type, List
 import pytorch_lightning
 import torch
 
-from agz.MCTS import MCTS
+from agz.MCTS_recurse import MCTS
 from games.Game import Game
 
 

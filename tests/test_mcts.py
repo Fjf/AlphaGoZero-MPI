@@ -1,7 +1,7 @@
 import unittest
 from collections import defaultdict
 
-from agz.MCTS import MCTS
+from agz.MCTS_recurse import MCTS
 from games.connect4.connect4 import Connect4
 from games.connect4.connect4_nn import Connect4NN
 from games.hive.hive import N_NODES
