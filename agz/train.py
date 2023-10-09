@@ -114,9 +114,9 @@ class School:
             game = self.game()
 
             if perspective == 0:
-                boards, result = self.simulator.play(game, [p1, p2], mcts=False)
+                boards, result = self.simulator.play(game, [p1, p2], mcts=True)
             else:
-                boards, result = self.simulator.play(game, [p2, p1], mcts=False)
+                boards, result = self.simulator.play(game, [p2, p1], mcts=True)
 
             win = self.get_win(result, perspective)
             wins += win

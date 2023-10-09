@@ -33,7 +33,7 @@ class Simulator:
         temperature = game.node.turn < 15
 
         if mcts:
-            policy = self.mcts_object.process(game, network, temperature=temperature)
+            policy = self.mcts_object.process(game, network)
         else:
             game.node.expand()
             policy, _ = network.predict(game.node.to_np(game.node.to_play))

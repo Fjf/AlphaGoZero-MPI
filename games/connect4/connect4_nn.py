@@ -1,12 +1,9 @@
-from typing import Optional
-
 import pytorch_lightning as pl
 import torch
 from pytorch_lightning.utilities.types import STEP_OUTPUT
 from torch import nn
 
 from games.connect4.connect4 import Connect4
-from games.utils import ResNetBlock
 
 
 class Connect4NN(pl.LightningModule):
