@@ -8,8 +8,8 @@ from joblib import delayed
 from matplotlib import pyplot as plt
 
 from games.Game import Game
-from train import School
-from utils import setup_parser
+from agz.train import School
+from agz.utils import setup_parser
 
 
 def performance(model_dir, game_type, model_type):

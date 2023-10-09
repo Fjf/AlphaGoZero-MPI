@@ -3,7 +3,7 @@ from typing import Optional, Type, List
 import pytorch_lightning
 import torch
 
-from MCTS import MCTS
+from agz.MCTS import MCTS
 from games.Game import Game
 
 
