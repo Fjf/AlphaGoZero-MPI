@@ -6,3 +6,4 @@ scipy
 torch>=2.0.1
 tensorboard
 tqdm
+joblib
