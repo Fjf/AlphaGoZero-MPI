@@ -20,12 +20,15 @@ from agz.simulator import Simulator
 
 class School:
     def __init__(self, game: Type[Game], network: Type[pytorch_lightning.LightningModule], n_sims=100,
-                 n_data_reuse=1, model_dir="model", data_dir="data", device="cuda:0", comm=None, **kwargs):
+                 n_data_reuse=1, model_dir="model", data_dir="data", device="cuda:0", comm=None, disable_tqdm=False,
+                 **kwargs):
         self.logger = logging.getLogger("Hive")
         self.network_type = network
 
         self.data_dir = data_dir
         self.model_dir = model_dir
+
+        self.disable_tqdm = disable_tqdm
 
         # Create directories
         if self.data_dir is not None:
@@ -68,10 +71,11 @@ class School:
 
         # Gather data from all workers
         data = []
-        for _ in tqdm(range(self.simulations)):
+        for _ in tqdm(range(self.simulations), disable=self.disable_tqdm):
             i, tensors, policy_vectors, result_values, nn_perspective = self.comm.recv()
             data.append((i, tensors, policy_vectors, result_values, nn_perspective))
         self.logger.debug(f"Spent {datetime.now() - start} to simulate {self.simulations} games.")
+        print(f"Spent {datetime.now() - start} to simulate {self.simulations} games.")
 
         return data
 
@@ -105,7 +109,7 @@ class School:
         self.simulator.temperature_threshold = 0
         p1 = p1.to("cuda") if p1 is not None else p1
         p2 = p2.to("cuda") if p2 is not None else p2
-        for i in tqdm(range(n_games)):
+        for i in tqdm(range(n_games), disable=self.disable_tqdm):
             perspective = i % 2
             game = self.game()
 

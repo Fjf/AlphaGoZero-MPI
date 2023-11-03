@@ -1,5 +1,6 @@
 import argparse
 import logging
+import sys
 
 from games.Game import Game
 
@@ -8,7 +9,7 @@ def setup_logger():
     formatter = logging.Formatter("[%(asctime)s] [%(levelname)5s] --- %(message)s (%(filename)s:%(lineno)s)",
                                   "%Y-%m-%d %H:%M:%S")
 
-    handler = logging.StreamHandler()
+    handler = logging.StreamHandler(stream=sys.stdout)
     handler.setFormatter(formatter)
 
     logger = logging.getLogger("Hive")
@@ -37,6 +38,7 @@ def setup_parser():
                         help="The amount of model updates to do during training before terminating.")
     parser.add_argument("--n_data_reuse", "-d", type=int, default=1,
                         help="The amount of data generation iterations being used for a single training update.")
+    parser.add_argument('--disable_tqdm', action=argparse.BooleanOptionalAction)
     subclasses = [s.__name__ for s in Game.__subclasses__()]
     parser.add_argument("--game", "-g", type=str, choices=subclasses, default=subclasses[0],
                         help="The current game to play.")
