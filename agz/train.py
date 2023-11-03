@@ -60,20 +60,16 @@ class School:
         self.logger.info(f"Simulating {self.simulations} games on {self.comm.Get_size()} processes.")
         start = datetime.now()
 
-        print("Sending data")
         # Create packet to send.
         packet = MPIPacket(MPIPacketState.PROCESS, players)
 
         # Broadcast latest models' state dicts
         self.comm.bcast(pickle.dumps(packet))
-        print("Done sending data")
 
         # Gather data from all workers
         data = []
         for _ in tqdm(range(self.simulations)):
             i, tensors, policy_vectors, result_values, nn_perspective = self.comm.recv()
-            # if result_values[0] == 0:
-            #     continue
             data.append((i, tensors, policy_vectors, result_values, nn_perspective))
         self.logger.debug(f"Spent {datetime.now() - start} to simulate {self.simulations} games.")
 
@@ -114,9 +110,9 @@ class School:
             game = self.game()
 
             if perspective == 0:
-                boards, result = self.simulator.play(game, [p1, p2], mcts=True)
+                boards, result = self.simulator.play(game, [p1, p2], mcts=False)
             else:
-                boards, result = self.simulator.play(game, [p2, p1], mcts=True)
+                boards, result = self.simulator.play(game, [p2, p1], mcts=False)
 
             win = self.get_win(result, perspective)
             wins += win
@@ -242,7 +238,7 @@ class School:
             self.updating_network.eval()
 
             with torch.no_grad():
-                self.show_debug_game(self.updating_network, self.stable_network)
+                # self.show_debug_game(self.updating_network, self.stable_network)
                 winrate, results = self.winrate(self.updating_network, self.stable_network, n_games=200)
                 self.logger.info(f"Current performance: {winrate * 100}% wr ({results})")
 
