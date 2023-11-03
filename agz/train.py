@@ -74,8 +74,9 @@ class School:
         for _ in tqdm(range(self.simulations), disable=self.disable_tqdm):
             i, tensors, policy_vectors, result_values, nn_perspective = self.comm.recv()
             data.append((i, tensors, policy_vectors, result_values, nn_perspective))
-        self.logger.debug(f"Spent {datetime.now() - start} to simulate {self.simulations} games.")
-        print(f"Spent {datetime.now() - start} to simulate {self.simulations} games.")
+        elapsed = datetime.now() - start
+        sims_per_sec = self.simulations / elapsed.total_seconds()
+        self.logger.debug(f"Spent {elapsed} to simulate {self.simulations} games ({sims_per_sec}).")
 
         return data
 
