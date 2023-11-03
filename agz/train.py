@@ -237,8 +237,8 @@ class School:
             # Train model, then check if model is good enough to replace existing model
             ##############################################################################
             self.updating_network.train()
-            trainer = Trainer(accelerator="gpu", devices=1, precision=16, max_epochs=2,
-                              default_root_dir="checkpoints")
+            trainer = Trainer(accelerator="gpu", enable_progress_bar=not self.disable_tqdm, devices=1, precision=16,
+                              max_epochs=2, default_root_dir="checkpoints")
             trainer.fit(self.updating_network, dataloader)
             self.updating_network.eval()
 
