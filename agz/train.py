@@ -24,6 +24,7 @@ class School:
                  **kwargs):
         self.logger = logging.getLogger("Hive")
         self.network_type = network
+        self.device = device
 
         self.data_dir = data_dir
         self.model_dir = model_dir
@@ -108,8 +109,8 @@ class School:
         results = [0, 0, 0]
         wins = 0
         self.simulator.temperature_threshold = 0
-        p1 = p1.to("cuda") if p1 is not None else p1
-        p2 = p2.to("cuda") if p2 is not None else p2
+        p1 = p1.to(self.device) if p1 is not None else p1
+        p2 = p2.to(self.device) if p2 is not None else p2
         for i in tqdm(range(n_games), disable=self.disable_tqdm):
             perspective = i % 2
             game = self.game()
@@ -237,7 +238,11 @@ class School:
             # Train model, then check if model is good enough to replace existing model
             ##############################################################################
             self.updating_network.train()
-            trainer = Trainer(accelerator="gpu", enable_progress_bar=not self.disable_tqdm, devices=1, precision=16,
+            if "cuda" in self.device:
+                accelerator = "gpu"
+            else:
+                accelerator = "auto"
+            trainer = Trainer(accelerator=accelerator, enable_progress_bar=not self.disable_tqdm, devices=1, precision=16,
                               max_epochs=2, default_root_dir="checkpoints")
             trainer.fit(self.updating_network, dataloader)
             self.updating_network.eval()
