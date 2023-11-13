@@ -244,7 +244,10 @@ class School:
                 accelerator = "auto"
             trainer = Trainer(accelerator=accelerator, enable_progress_bar=not self.disable_tqdm, devices=1, precision=16,
                               max_epochs=2, default_root_dir="checkpoints")
+            start = datetime.now()
             trainer.fit(self.updating_network, dataloader)
+            elapsed = (datetime.now() - start).total_seconds()
+            self.logger.info(f"Training: {elapsed} ({len(dataloader) / elapsed}/s)")
             self.updating_network.eval()
 
             with torch.no_grad():
